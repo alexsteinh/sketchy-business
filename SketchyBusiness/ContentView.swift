@@ -17,7 +17,7 @@ struct ContentView: View {
             
             ToolbarView(viewModel: viewModel)
         }
-        .navigationTitle("Annotate ya image")
+        .navigationTitle("Annotate your image")
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
@@ -33,6 +33,7 @@ struct ContentView: View {
 }
 
 struct ToolbarView: View {
+    @Environment(\.colorScheme) private var colorScheme
     @ObservedObject var viewModel: DrawableImageViewModel
     
     var body: some View {
@@ -86,7 +87,7 @@ struct ToolbarView: View {
         }
         .frame(maxHeight: 90)
         .background {
-            RoundedRectangle(cornerRadius: 10).fill(Color(uiColor: .init(white: 0.9, alpha: 1)))
+            RoundedRectangle(cornerRadius: 10).fill(Color(uiColor: .init(white: colorScheme == .light ? 0.9 : 0.1, alpha: 1)))
         }
         .padding()
     }
