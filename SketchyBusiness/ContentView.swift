@@ -8,14 +8,29 @@
 import SwiftUI
 
 struct ContentView: View {
+    @StateObject var viewModel = DrawableImageViewModel(image: UIImage(named: "Tree")!)
+    
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundColor(.accentColor)
-            Text("Hello, world!")
-        }
-        .padding()
+        DrawableImage(viewModel: viewModel)
+            .navigationTitle("Annotate ya image")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button {
+                        let image = viewModel.sketchedImage
+                        UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil)
+                    } label: {
+                        Text("Done")
+                    }
+                }
+                ToolbarItem(placement: .bottomBar) {
+                    Button {
+                        viewModel.clearDrawing()
+                    } label: {
+                        Text("Clear Drawing")
+                    }
+                }
+            }
     }
 }
 
