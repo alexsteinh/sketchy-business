@@ -28,6 +28,11 @@ struct DrawableImage: View {
     }
 }
 
+enum Pencil {
+    case redPen
+    case greenPen
+}
+
 class DrawableImageViewModel: ObservableObject {
     let image: UIImage
     let canvasViewModel = CanvasViewModel()
@@ -36,12 +41,26 @@ class DrawableImageViewModel: ObservableObject {
         mergeImages(bottomImage: image, topImage: canvasViewModel.imageGetter())
     }
     
+    var pencil: Pencil = .redPen {
+        didSet {
+            canvasViewModel.selectPencil(pencil)
+        }
+    }
+    
     init(image: UIImage) {
         self.image = image
     }
     
     func clearDrawing() {
         canvasViewModel.clearDrawing()
+    }
+    
+    func undoStroke() {
+        canvasViewModel.undoStroke()
+    }
+    
+    func redoStroke() {
+        canvasViewModel.redoStroke()
     }
     
     private func mergeImages(bottomImage: UIImage, topImage: UIImage) -> UIImage {

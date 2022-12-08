@@ -12,6 +12,7 @@ import SwiftUI
 struct CanvasView: UIViewRepresentable {
     typealias UIViewType = PKCanvasView
     
+    @Environment(\.undoManager) private var undoManager
     @ObservedObject var viewModel: CanvasViewModel
     
     func makeUIView(context: Context) -> PKCanvasView {
@@ -40,6 +41,19 @@ struct CanvasView: UIViewRepresentable {
             canvasView?.drawing.strokes = []
         }
         
+        // Set current pencil
+        viewModel.selectPencil = { [weak canvasView] pencil in
+            switch pencil {
+            case .redPen:
+                canvasView?.tool = PKInkingTool(.pen, color: .red, width: 2)
+            case .greenPen:
+                canvasView?.tool = PKInkingTool(.pen, color: .green, width: 2)
+            }
+        }
+        
+        // Set undo manager for undo/redo of drawn strokes
+        viewModel.undoManager = undoManager
+        
         return canvasView
     }
     
@@ -49,8 +63,19 @@ struct CanvasView: UIViewRepresentable {
 }
 
 class CanvasViewModel: ObservableObject {
+    fileprivate var undoManager: UndoManager?
+    
     fileprivate(set) var imageGetter: () -> UIImage = { .init() }
     fileprivate(set) var clearDrawing: () -> Void = { }
+    fileprivate(set) var selectPencil: (Pencil) -> Void = { _ in }
+    
+    func undoStroke() {
+        undoManager?.undo()
+    }
+    
+    func redoStroke() {
+        undoManager?.redo()
+    }
 }
 
 struct CanvasView_Previews: PreviewProvider {
