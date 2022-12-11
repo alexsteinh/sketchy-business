@@ -42,12 +42,12 @@ struct CanvasView: UIViewRepresentable {
         }
         
         // Set current pencil
-        viewModel.selectPencil = { [weak canvasView] pencil in
+        viewModel.selectPencil = { [weak canvasView] pencil, pencilWidth in
             switch pencil {
             case .redPen:
-                canvasView?.tool = PKInkingTool(.pen, color: .red, width: 2)
+                canvasView?.tool = PKInkingTool(.monoline, color: .red, width: pencilWidth)
             case .greenPen:
-                canvasView?.tool = PKInkingTool(.pen, color: .green, width: 2)
+                canvasView?.tool = PKInkingTool(.monoline, color: .green, width: pencilWidth)
             }
         }
         
@@ -67,7 +67,7 @@ class CanvasViewModel: ObservableObject {
     
     fileprivate(set) var imageGetter: () -> UIImage = { .init() }
     fileprivate(set) var clearDrawing: () -> Void = { }
-    fileprivate(set) var selectPencil: (Pencil) -> Void = { _ in }
+    fileprivate(set) var selectPencil: (Pencil, CGFloat) -> Void = { _, _ in }
     
     func undoStroke() {
         undoManager?.undo()

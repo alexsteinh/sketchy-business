@@ -41,9 +41,15 @@ class DrawableImageViewModel: ObservableObject {
         mergeImages(bottomImage: image, topImage: canvasViewModel.imageGetter())
     }
     
-    var pencil: Pencil = .redPen {
+    @Published var pencil: Pencil = .redPen {
         didSet {
-            canvasViewModel.selectPencil(pencil)
+            updatePencil()
+        }
+    }
+    
+    @Published var pencilWidth: CGFloat = 2 {
+        didSet {
+            updatePencil()
         }
     }
     
@@ -61,6 +67,10 @@ class DrawableImageViewModel: ObservableObject {
     
     func redoStroke() {
         canvasViewModel.redoStroke()
+    }
+    
+    private func updatePencil() {
+        canvasViewModel.selectPencil(pencil, pencilWidth)
     }
     
     private func mergeImages(bottomImage: UIImage, topImage: UIImage) -> UIImage {
